@@ -26,7 +26,7 @@ export default function Register({navigation}) {
         }
     }
 
-    retur (
+    return (
         <View style={styles.container}>
             <Text style={styles.title}>Cadastrar Usuário</Text>
             <TextInput placeholder="Nome" style={styles.input} value={nome} onChangeText={setNome}/>
