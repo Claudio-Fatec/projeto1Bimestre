@@ -44,7 +44,7 @@ export default function Cards({ navigation }) {
 
       {/* 🔹 Botão de Voltar para Login no topo */}
       <View style={{ marginBottom: 15 }}>
-        <Button title="Voltar para Login" color="purple" onPress={() => navigation.replace("Login")} />
+        <Button title="Logout" color="purple" onPress={() => navigation.replace("Login")} />
       </View>
 
       <View style={styles.buttonsRow}>
