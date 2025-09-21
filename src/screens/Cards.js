@@ -7,7 +7,6 @@ export default function Cards({ navigation }) {
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
-    // opcional: carregar alguns cards iniciais
     loadMore();
   }, []);
 
@@ -25,12 +24,10 @@ export default function Cards({ navigation }) {
       setOffset(prev => prev + 10);
     } catch (e) {
       Alert.alert('Erro', 'Falha ao buscar dados da API Marvel. Verifique as chaves e a internet.');
-      console.log(e);
     }
   }
 
   function handleAdd() {
-    // chama loadMore para adicionar mais personagens
     loadMore();
   }
 
@@ -44,6 +41,12 @@ export default function Cards({ navigation }) {
 
   return (
     <View style={styles.container}>
+
+      {/* 🔹 Botão de Voltar para Login no topo */}
+      <View style={{ marginBottom: 15 }}>
+        <Button title="Voltar para Login" color="purple" onPress={() => navigation.replace("Login")} />
+      </View>
+
       <View style={styles.buttonsRow}>
         <Button title="ADD" onPress={handleAdd}/>
         <Button title="CARREGAR MAIS" onPress={loadMore}/>
@@ -83,8 +86,3 @@ const styles = StyleSheet.create({
   btn:{ backgroundColor:'#2980b9', padding:8, borderRadius:6 },
   btnText:{ color:'#fff', fontSize:12 }
 });
-
-<View style={{ marginVertical: 10 }}>
-  <Button title="Voltar para Login" color="purple" onPress={() => navigation.replace("Login")} />
-</View>
-
