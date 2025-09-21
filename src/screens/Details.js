@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView,Button, StyleSheet } from 'react-native';
 
 export default function Details({ route }) {
   const { item } = route.params;
@@ -27,3 +27,9 @@ const styles = StyleSheet.create({
   title:{ fontSize:22, fontWeight:'bold', marginBottom:8 },
   sectionTitle:{ marginTop:12, fontWeight:'bold' }
 });
+
+<View style={{ marginVertical: 20 }}>
+  <Button title="Voltar para Login" color="purple" onPress={() => navigation.replace("Login")} />
+</View>
+
+

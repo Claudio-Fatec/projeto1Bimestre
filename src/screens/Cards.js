@@ -83,3 +83,8 @@ const styles = StyleSheet.create({
   btn:{ backgroundColor:'#2980b9', padding:8, borderRadius:6 },
   btnText:{ color:'#fff', fontSize:12 }
 });
+
+<View style={{ marginVertical: 10 }}>
+  <Button title="Voltar para Login" color="purple" onPress={() => navigation.replace("Login")} />
+</View>
+
