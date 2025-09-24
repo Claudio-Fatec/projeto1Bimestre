@@ -22,7 +22,7 @@ export default function Register({ navigation }) {
       const json = await AsyncStorage.getItem('users');
       let lista = json ? JSON.parse(json) : [];
       
-      // Evita duplicar pelo e-mail ou CPF
+      
       if (lista.find(u => u.email === email || u.cpf === cpf)) {
         Alert.alert('Erro', 'Usuário já cadastrado com este e-mail ou CPF.');
         return;
@@ -32,7 +32,7 @@ export default function Register({ navigation }) {
       await AsyncStorage.setItem('users', JSON.stringify(lista));
 
       Alert.alert('Sucesso', 'Usuário salvo localmente.');
-      navigation.goBack(); // volta ao LOGIN
+      navigation.goBack(); 
     } catch (e) {
       Alert.alert('Erro', 'Falha ao salvar usuário.');
     }

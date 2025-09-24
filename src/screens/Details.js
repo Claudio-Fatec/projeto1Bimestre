@@ -16,7 +16,7 @@ export default function Details({ route }) {
       {item.more?.comics && <Text>Comics available: {item.more.comics.available}</Text>}
       {item.more?.series && <Text>Series available: {item.more.series.available}</Text>}
       {item.more?.stories && <Text>Stories available: {item.more.stories.available}</Text>}
-      {/* adicione outros campos conforme necessário */}
+      
     </ScrollView>
   );
 }

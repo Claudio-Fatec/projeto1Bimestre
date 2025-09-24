@@ -6,8 +6,7 @@ import Login from '../screens/Login';
 import Register from '../screens/Register';
 import Cards from '../screens/Cards';
 import Details from '../screens/Details';
-import Users from '../screens/Users';   // ⬅️ IMPORTANTE: importar aqui
-
+import Users from '../screens/Users';   
 const Stack = createStackNavigator();
 
 export default function Routes() {
@@ -19,7 +18,7 @@ export default function Routes() {
         <Stack.Screen name="Cards" component={Cards} options={{ title: 'Cards' }}/>
         <Stack.Screen name="Details" component={Details} options={{ title: 'Detalhes' }}/>
         <Stack.Screen name="Users" component={Users} options={{ title: 'Usuários Cadastrados' }}/> 
-        {/* ⬆️ Agora o Navigator conhece a tela Users */}
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
