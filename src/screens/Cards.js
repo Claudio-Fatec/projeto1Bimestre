@@ -1,18 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Button, FlatList, Image, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, Button, FlatList, Image, TouchableOpacity, StyleSheet, Alert, TextInput } from 'react-native';
 import { fetchCharacters } from '../services/marvel';
 
 export default function Cards({ navigation }) {
   const [cards, setCards] = useState([]);
   const [offset, setOffset] = useState(0);
+  const [search, setSearch] = useState('');
 
+  
+  function addWithoutDuplicates(prev, novos) {
+    const ids = new Set(prev.map(c => c.id));
+    const filtrados = novos.filter(n => !ids.has(n.id));
+    return [...prev, ...filtrados];
+  }
+
+  
   useEffect(() => {
-    loadMore();
+    loadInitial();
   }, []);
 
-  async function loadMore() {
+  async function loadInitial() {
     try {
-      const data = await fetchCharacters({ limit: 10, offset });
+      const data = await fetchCharacters({ limit: 5, offset: 0 });
       const results = data.data.results.map(r => ({
         id: r.id,
         name: r.name,
@@ -20,15 +29,44 @@ export default function Cards({ navigation }) {
         thumbnail: `${r.thumbnail.path}.${r.thumbnail.extension}`,
         more: r
       }));
-      setCards(prev => [...prev, ...results]);
-      setOffset(prev => prev + 10);
+      setCards(results);
+      setOffset(5);
     } catch (e) {
-      Alert.alert('Erro', 'Falha ao buscar dados da API Marvel. Verifique as chaves e a internet.');
+      Alert.alert('Erro', 'Falha ao carregar personagens iniciais.');
     }
   }
 
-  function handleAdd() {
-    loadMore();
+ 
+  async function handleSearch() {
+    if (!search.trim()) {
+      Alert.alert('Aviso', 'Digite um nome para pesquisar');
+      return;
+    }
+
+    try {
+      const data = await fetchCharacters({ name: search.trim() });
+      let results = data.data.results.map(r => ({
+        id: r.id,
+        name: r.name,
+        description: r.description,
+        thumbnail: `${r.thumbnail.path}.${r.thumbnail.extension}`,
+        more: r
+      }));
+
+      
+      const termo = search.trim().toLowerCase();
+      results = results.filter(r => r.name.toLowerCase().includes(termo));
+
+      if (results.length === 0) {
+        Alert.alert('Aviso', 'Nenhum personagem encontrado');
+        return;
+      }
+
+      setCards(prev => addWithoutDuplicates(results, prev));
+      setSearch('');
+    } catch (e) {
+      Alert.alert('Erro', 'Falha na pesquisa de personagens.');
+    }
   }
 
   function handleExcluir(id) {
@@ -41,17 +79,23 @@ export default function Cards({ navigation }) {
 
   return (
     <View style={styles.container}>
-
       
       <View style={{ marginBottom: 15 }}>
-        <Button title="Logout" color="purple" onPress={() => navigation.replace("Login")} />
+        <Button title="Voltar para Login" color="purple" onPress={() => navigation.replace("Login")} />
       </View>
 
-      <View style={styles.buttonsRow}>
-        <Button title="ADD" onPress={handleAdd}/>
-        <Button title="CARREGAR MAIS" onPress={loadMore}/>
+      
+      <View style={styles.searchRow}>
+        <TextInput
+          style={styles.input}
+          placeholder="Pesquisar personagem..."
+          value={search}
+          onChangeText={setSearch}
+        />
+        <Button title="Adicionar" onPress={handleSearch} />
       </View>
 
+      
       <FlatList
         data={cards}
         keyExtractor={item => String(item.id)}
@@ -60,7 +104,7 @@ export default function Cards({ navigation }) {
             {item.thumbnail ? <Image source={{ uri: item.thumbnail }} style={styles.thumb}/> : null}
             <View style={{flex:1, paddingLeft:8}}>
               <Text style={styles.name}>{item.name}</Text>
-              <Text numberOfLines={2}>{item.description || 'Sem descrição'}</Text>
+              <Text numberOfLines={2}>{item.description || 'Sem descrição disponível'}</Text>
               <View style={{flexDirection:'row', marginTop:8}}>
                 <TouchableOpacity onPress={() => handleVerMais(item)} style={styles.btn}>
                   <Text style={styles.btnText}>VER MAIS DETALHES</Text>
@@ -79,7 +123,8 @@ export default function Cards({ navigation }) {
 
 const styles = StyleSheet.create({
   container:{ flex:1, padding:10 },
-  buttonsRow:{ flexDirection:'row', justifyContent:'space-between', marginBottom:10 },
+  searchRow:{ flexDirection:'row', marginBottom:10 },
+  input:{ flex:1, borderWidth:1, borderColor:'#ccc', padding:8, marginRight:8, borderRadius:6 },
   card:{ flexDirection:'row', padding:10, borderWidth:1, borderColor:'#ddd', borderRadius:8, marginBottom:10 },
   thumb:{ width:100, height:100, borderRadius:6 },
   name:{ fontWeight:'bold', fontSize:16 },
